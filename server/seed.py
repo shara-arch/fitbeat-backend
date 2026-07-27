@@ -22,3 +22,11 @@ with app.app_context():
 
     db.session.add_all([squats, burpees, swim, plank, cycling])
     db.session.commit()    
+
+    #WORKOUTS(wo[number]) **letter 'o'**
+    wo1 = Workout(date=date(2025, 1, 10), duration_minutes=60, notes='Leg day')
+    wo2 = Workout(date=date(2025, 1, 12), duration_minutes=45, notes='Upper body')
+    wo3 = Workout(date=date(2025, 1, 14), duration_minutes=30, notes='Quick cardio')
+
+    db.session.add_all([wo1, wo2, wo3])
+    db.session.commit()

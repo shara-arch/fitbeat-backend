@@ -12,6 +12,10 @@ migrate = Migrate(app, db)
 db.init_app(app)
 
 # Define Routes here
+#List all workouts
+@app.route('/workouts', methods=['GET'])
+def get_workouts():
+    return make_response('list workouts', 200)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

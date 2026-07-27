@@ -11,3 +11,14 @@ with app.app_context():
     WorkoutExercises.query.delete()
     Workout.query.delete()
     Exercise.query.delete()
+
+    # --- Exercises ---
+    squats = Exercise(name='Back Squat', category='Strength', equipment_needed=True)
+    burpees = Exercise(name='Burpees', category='Strength', equipment_needed=False)
+    swim = Exercise(name='1.6 Km Swim', category='Cardio', equipment_needed=False)
+    plank = Exercise(name='Plank', category='Core', equipment_needed=False)
+    cycling = Exercise(name='Cycling', category='Cardio', equipment_needed=True)
+
+
+    db.session.add_all([squats, burpees, swim, plank, cycling])
+    db.session.commit()    

@@ -3,6 +3,7 @@ from sqlalchemy.orm import validates
 db = SQLAlchemy()
 
 # Define Models here
+# 1. Exercise Model
 class Exercise(db.Model):
     __tablename__ = 'exercises'
 
@@ -12,3 +13,14 @@ class Exercise(db.Model):
     equipment_needed = db.Column(db.Boolean, default=False)
 
     # relationships added later
+
+# 2.Workout Model    
+class Workout(db.Model):
+    __tablename__ = 'workouts'
+
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    duration_minutes = db.Column(db.Integer, nullable=False)
+    notes = db.Column(db.Text)
+
+    # relationships (will go here)

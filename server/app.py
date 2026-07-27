@@ -32,6 +32,25 @@ def create_workout():
 def delete_workout(id):
     return make_response('delete workout', 204)
 
+#List an Exercises
+@app.route('/exercises', methods=['GET'])
+def get_exercises():
+    return make_response('list exercises', 200)
+
+#Show an exercise and associated workouts
+@app.route('/exercises/<int:id>', methods=['GET'])
+def get_exercise(id):
+    return make_response('show exercise', 200)
+
+#Create an exercise
+@app.route('/exercises', methods=['POST'])
+def create_exercise():
+    return make_response('create exercise', 201)
+
+#Delete an exercise
+@app.route('/exercises/<int:id>', methods=['DELETE'])
+def delete_exercise(id):
+    return make_response('delete exercise', 204)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

@@ -85,4 +85,9 @@ class WorkoutExercises(db.Model):
     workout = db.relationship('Workout', back_populates='workout_exercises')
     exercise = db.relationship('Exercise', back_populates='workout_exercises')
 
-    #Validation
+    #Validation(this ensure atleas on of the sets/reps/duration is provided and non-negative )
+    @validates('reps', 'sets', 'duration_seconds')
+    def validate_non_negative(self, key, value):
+        if value is not None and value < 0:
+            raise ValueError(f'{key} must be POSITIVE(>0)')
+        return value

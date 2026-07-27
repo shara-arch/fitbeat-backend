@@ -1,0 +1,7 @@
+# .gitignore
+*.pyc
+__pycache__/
+instance/
+server/app.db
+.env
+.venv/

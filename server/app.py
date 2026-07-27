@@ -17,5 +17,21 @@ db.init_app(app)
 def get_workouts():
     return make_response('list workouts', 200)
 
+#Show a single workout with its associated exercises
+@app.route('/workouts/<int:id>', methods=['GET'])
+def get_workout(id):
+    return make_response('show workout', 200)
+
+#Create a Workout
+@app.route('/workouts', methods=['POST'])
+def create_workout():
+    return make_response('create workout', 201)
+
+#Delete a workout
+@app.route('/workouts/<int:id>', methods=['DELETE'])
+def delete_workout(id):
+    return make_response('delete workout', 204)
+
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

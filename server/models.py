@@ -12,7 +12,20 @@ class Exercise(db.Model):
     category = db.Column(db.String, nullable=False)
     equipment_needed = db.Column(db.Boolean, default=False)
 
-    # relationships added later
+    # relationships 
+    # An Exercise have many WorkoutExercises
+    workout_exercises = db.relationship(
+        'WorkoutExercises',
+        back_populates='exercise',
+        cascade='all, delete-orphan'
+    )
+    # An Exercise has many Workouts through WorkoutExercises
+    workouts = db.relationship(
+        'Workout',
+        secondary='workout_exercises',
+        viewonly=True
+    )
+
 
 # 2.Workout Model    
 class Workout(db.Model):
@@ -23,7 +36,19 @@ class Workout(db.Model):
     duration_minutes = db.Column(db.Integer, nullable=False)
     notes = db.Column(db.Text)
 
-    # relationships (will go here)
+    # relationships 
+    # A Workout has many WorkoutExercises
+    workout_exercises = db.relationship(
+        'WorkoutExercises',
+        back_populates='workout',
+        cascade='all, delete-orphan'
+    )
+    #A Workout has many exercises through WorkoutExercisses
+    exercises = db.relationship(
+        'Exercise',
+        secondary='workout_exercises',
+        viewonly=True
+    )    
 
 # 3. WorkoutExercises joined Model
 class WorkoutExercises(db.Model):
@@ -37,3 +62,6 @@ class WorkoutExercises(db.Model):
     duration_seconds = db.Column(db.Integer)
 
     # relationships 
+    # WorkoutExercises belong to Workout and Exercise
+    workout = db.relationship('Workout', back_populates='workout_exercises')
+    exercise = db.relationship('Exercise', back_populates='workout_exercises')

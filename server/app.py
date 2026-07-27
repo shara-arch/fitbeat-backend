@@ -52,5 +52,10 @@ def create_exercise():
 def delete_exercise(id):
     return make_response('delete exercise', 204)
 
+#Add an exercise to a workout, including reps/sets/duration
+@app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
+def add_exercise_to_workout(workout_id, exercise_id):
+    return make_response('add exercise to workout', 201)
+
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

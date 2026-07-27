@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import validates
+from sqlalchemy import CheckConstraint
 db = SQLAlchemy()
 
 # Define Models here
@@ -37,6 +38,10 @@ class Exercise(db.Model):
 class Workout(db.Model):
     __tablename__ = 'workouts'
 
+    # Constraint[ Duration must be strictly positive (> 0)]
+    __table_args__ = (
+        CheckConstraint('duration_minutes > 0', name='check_positive_duration'),
+    )
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
     duration_minutes = db.Column(db.Integer, nullable=False)
@@ -56,7 +61,13 @@ class Workout(db.Model):
         viewonly=True
     )    
     # Model Validation(Ensures the duration of each exercise exceedes 0min)
-   
+    @validates('duration_minutes')
+    def validate_duration(self, key, duration):
+        if duration is None or duration <= 0:
+            raise ValueError("Workout duration MUST be more than 0 minutes.")
+        return duration
+    def __repr__(self):
+        return f"<Workout {self.id}: {self.date}>"    
 
 # 3. WorkoutExercises joined Model
 class WorkoutExercises(db.Model):

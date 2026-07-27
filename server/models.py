@@ -25,6 +25,12 @@ class Exercise(db.Model):
         secondary='workout_exercises',
         viewonly=True
     )
+    #Table constraints(to ensure no exercises share names)
+    __table_args__ = (
+        db.UniqueConstraint('name', name='uq_exercise_name'),
+    )
+    # ... columns ... 
+
 
 
 # 2.Workout Model    
@@ -49,6 +55,8 @@ class Workout(db.Model):
         secondary='workout_exercises',
         viewonly=True
     )    
+    # Model Validation(Ensures the duration of each exercise exceedes 0min)
+   
 
 # 3. WorkoutExercises joined Model
 class WorkoutExercises(db.Model):
@@ -65,3 +73,5 @@ class WorkoutExercises(db.Model):
     # WorkoutExercises belong to Workout and Exercise
     workout = db.relationship('Workout', back_populates='workout_exercises')
     exercise = db.relationship('Exercise', back_populates='workout_exercises')
+
+    #Validation

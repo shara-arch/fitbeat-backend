@@ -74,7 +74,7 @@ def get_exercises():
     schema = ExerciseSchema(many=True)
     return make_response(schema.dump(exercises), 200)
 
-
+#Show an exercise and associated workouts
 @app.route('/exercises/<int:id>', methods=['GET'])
 def get_exercise(id):
     exercise = Exercise.query.get(id)
@@ -83,15 +83,25 @@ def get_exercise(id):
     schema = ExerciseWithWorkoutsSchema()
     return make_response(schema.dump(exercise), 200)
 
-#Show an exercise and associated workouts
-@app.route('/exercises/<int:id>', methods=['GET'])
-def get_exercise(id):
-    return make_response('show exercise', 200)
 
 #Create an exercise
 @app.route('/exercises', methods=['POST'])
 def create_exercise():
-    return make_response('create exercise', 201)
+    data = request.get_json()
+    try:
+        exercise = ExerciseSchema().load(data)
+    except ValidationError as err:
+        return make_response(jsonify({'errors': err.messages}), 400)
+
+    new_exercise = Exercise(
+        name=exercise['name'],
+        category=exercise['category'],
+        equipment_needed=exercise.get('equipment_needed', False)
+    )
+    db.session.add(new_exercise)
+    db.session.commit()
+
+    return make_response(ExerciseSchema().dump(new_exercise), 201)
 
 #Delete an exercise
 @app.route('/exercises/<int:id>', methods=['DELETE'])

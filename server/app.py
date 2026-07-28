@@ -58,7 +58,14 @@ def create_workout():
 #Delete a workout
 @app.route('/workouts/<int:id>', methods=['DELETE'])
 def delete_workout(id):
-    return make_response('delete workout', 204)
+    workout = Workout.query.get(id)
+    if not workout:
+        return make_response(jsonify({'error': 'Workout not found'}), 404)
+
+    # cascade='all, delete-orphan' removes associated WorkoutExercises automatically
+    db.session.delete(workout)
+    db.session.commit()
+    return make_response('', 204)
 
 #List an Exercises
 @app.route('/exercises', methods=['GET'])

@@ -3,7 +3,13 @@ from flask_migrate import Migrate
 from marshmallow import ValidationError 
 
 from models import db, Workout, Exercise, WorkoutExercises
-
+from schemas import (
+    ExerciseSchema,
+    WorkoutSchema,
+    WorkoutExercisesSchema,
+    ExerciseWithWorkoutsSchema,
+    WorkoutWithExercisesSchema,
+)
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -24,7 +30,11 @@ def get_workouts():
 #Show a single workout with its associated exercises
 @app.route('/workouts/<int:id>', methods=['GET'])
 def get_workout(id):
-    return make_response('show workout', 200)
+    workout = Workout.query.get(id)
+    if not workout:
+        return make_response(jsonify({'error': 'Workout not found'}), 404)
+    schema = WorkoutWithExercisesSchema()
+    return make_response(schema.dump(workout), 200)
 
 #Create a Workout
 @app.route('/workouts', methods=['POST'])

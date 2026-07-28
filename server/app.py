@@ -70,7 +70,18 @@ def delete_workout(id):
 #List an Exercises
 @app.route('/exercises', methods=['GET'])
 def get_exercises():
-    return make_response('list exercises', 200)
+    exercises = Exercise.query.all()
+    schema = ExerciseSchema(many=True)
+    return make_response(schema.dump(exercises), 200)
+
+
+@app.route('/exercises/<int:id>', methods=['GET'])
+def get_exercise(id):
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return make_response(jsonify({'error': 'Exercise not found'}), 404)
+    schema = ExerciseWithWorkoutsSchema()
+    return make_response(schema.dump(exercise), 200)
 
 #Show an exercise and associated workouts
 @app.route('/exercises/<int:id>', methods=['GET'])

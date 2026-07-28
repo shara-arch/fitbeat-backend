@@ -1,7 +1,9 @@
 from flask import Flask, make_response, request, jsonify
 from flask_migrate import Migrate
+from marshmallow import ValidationError 
 
 from models import db, Workout, Exercise, WorkoutExercises
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -15,7 +17,9 @@ db.init_app(app)
 #List all workouts
 @app.route('/workouts', methods=['GET'])
 def get_workouts():
-    return make_response('list workouts', 200)
+    workouts = Workout.query.all()
+    schema = WorkoutSchema(many=True)
+    return make_response(schema.dump(workouts), 200)
 
 #Show a single workout with its associated exercises
 @app.route('/workouts/<int:id>', methods=['GET'])

@@ -117,7 +117,33 @@ def delete_exercise(id):
 #Add an exercise to a workout, including reps/sets/duration
 @app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])
 def add_exercise_to_workout(workout_id, exercise_id):
-    return make_response('add exercise to workout', 201)
+    workout = Workout.query.get(workout_id)
+    exercise = Exercise.query.get(exercise_id)
+    if not workout:
+        return make_response(jsonify({'error': 'Workout not found'}), 404)
+    if not exercise:
+        return make_response(jsonify({'error': 'Exercise not found'}), 404)
+
+    data = request.get_json() or {}
+    data['workout_id'] = workout_id
+    data['exercise_id'] = exercise_id
+
+    try:
+        loaded = WorkoutExercisesSchema().load(data)
+    except ValidationError as err:
+        return make_response(jsonify({'errors': err.messages}), 400)
+
+    new_we = WorkoutExercises(
+        workout_id=workout_id,
+        exercise_id=exercise_id,
+        reps=loaded.get('reps'),
+        sets=loaded.get('sets'),
+        duration_seconds=loaded.get('duration_seconds'),
+    )
+    db.session.add(new_we)
+    db.session.commit()
+
+    return make_response(WorkoutExercisesSchema().dump(new_we), 201)
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)

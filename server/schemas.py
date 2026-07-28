@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validate, ValidationError, post_load
+from marshmallow import Schema, fields, validate, ValidationError, post_load, validates_schema
 from models import Workout, Exercise, WorkoutExercises
 
 

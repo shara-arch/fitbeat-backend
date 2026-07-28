@@ -106,7 +106,13 @@ def create_exercise():
 #Delete an exercise
 @app.route('/exercises/<int:id>', methods=['DELETE'])
 def delete_exercise(id):
-    return make_response('delete exercise', 204)
+    exercise = Exercise.query.get(id)
+    if not exercise:
+        return make_response(jsonify({'error': 'Exercise not found'}), 404)
+
+    db.session.delete(exercise)
+    db.session.commit()
+    return make_response('', 204)
 
 #Add an exercise to a workout, including reps/sets/duration
 @app.route('/workouts/<int:workout_id>/exercises/<int:exercise_id>/workout_exercises', methods=['POST'])

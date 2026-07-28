@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, validate, ValidationError, post_load, validates_schema
+from marshmallow import Schema, fields, validate, ValidationError, post_load, validates_schema, validates
 from models import Workout, Exercise, WorkoutExercises
 
 
@@ -15,6 +15,12 @@ class ExerciseSchema(Schema):
         validate=[validate.Length(min=1, error="Category cannot be empty.")]
     )
     equipment_needed = fields.Boolean(load_default=False)
+
+    @validates('name')
+    def validate_unique_name(self, value, **kwargs):
+        # Query the database to check if an exercise with this name already exists
+        if Exercise.query.filter_by(name=value).first():
+            raise ValidationError('An exercise with this name already exists.')
 
 
 class WorkoutSchema(Schema):

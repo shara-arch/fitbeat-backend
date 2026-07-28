@@ -23,3 +23,15 @@ class WorkoutExercisesSchema(Schema):
     reps = fields.Integer(allow_none=True)
     sets = fields.Integer(allow_none=True)
     duration_seconds = fields.Integer(allow_none=True)
+
+# Nested Schemas for showing relationships
+class ExerciseWithWorkoutsSchema(ExerciseSchema):
+    workouts = fields.List(fields.Nested(WorkoutSchema, exclude=('workout_exercises',)))
+
+
+class WorkoutWithExercisesSchema(WorkoutSchema):
+    exercises = fields.List(fields.Nested(ExerciseSchema, exclude=('workout_exercises',)))
+    workout_exercises = fields.List(fields.Nested(WorkoutExercisesSchema))    
+
+
+    
